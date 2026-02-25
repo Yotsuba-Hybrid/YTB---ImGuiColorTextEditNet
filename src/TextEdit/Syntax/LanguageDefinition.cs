@@ -33,12 +33,69 @@ public class LanguageDefinition
     public bool CaseSensitive = true;
 
     /// <summary>A list of regular expressions that define token patterns for syntax highlighting.</summary>
-    public List<(string, PaletteIndex)> TokenRegexStrings = []; // TODO: Actually use this
+    public List<(string, PaletteIndex)> TokenRegexStrings = [];
 
     /// <summary>
     /// Initializes a new instance of the <see cref="LanguageDefinition"/> class with the specified name.
     /// </summary>
     public LanguageDefinition(string name) => Name = name;
+
+    /// <summary>Creates a predefined language definition for C# (CSharp).</summary>
+    public static LanguageDefinition CSharp()
+    {
+        // csharpier-ignore-start
+        LanguageDefinition langDef = new("C#")
+        {
+            Keywords =
+            [
+                "abstract", "as", "base", "bool", "break", "byte", "case", "catch", "char", "checked", "class", "const", "continue", "decimal", "default", "delegate",
+                "do", "double", "else", "enum", "event", "explicit", "extern", "false", "finally", "fixed", "float", "for", "foreach", "goto", "if", "implicit",
+                "in", "int", "interface", "internal", "is", "lock", "long", "namespace", "new", "null", "object", "operator", "out", "override", "params", "private",
+                "protected", "public", "readonly", "ref", "return", "sbyte", "sealed", "short", "sizeof", "stackalloc", "static", "string", "struct", "switch", "this", "throw",
+                "true", "try", "typeof", "uint", "ulong", "unchecked", "unsafe", "ushort", "using", "virtual", "void", "volatile", "while",
+                "async", "await", "var", "dynamic", "yield", "nameof", "when", "where", "record", "init", "required", "global", "managed", "unmanaged",
+                "notnull", "nint", "nuint", "with", "and", "or", "not", "file", "scoped", "partial", "get", "set", "add", "remove", "value"
+            ],
+            Identifiers =
+            [
+                "Console", "Math", "Convert", "Environment", "GC", "Array", "Enum", "Tuple", "ValueTuple",
+                "String", "Int32", "Int64", "Double", "Single", "Boolean", "Char", "Byte", "Object", "Decimal", "UInt32", "UInt64", "Int16", "UInt16", "SByte",
+                "List", "Dictionary", "HashSet", "Queue", "Stack", "LinkedList", "SortedSet", "SortedDictionary", "SortedList",
+                "IEnumerable", "ICollection", "IList", "IDictionary", "IReadOnlyList", "IReadOnlyCollection", "IReadOnlyDictionary",
+                "Task", "ValueTask", "CancellationToken", "CancellationTokenSource",
+                "Span", "ReadOnlySpan", "Memory", "ReadOnlyMemory",
+                "StringBuilder", "Regex", "Match", "Group",
+                "File", "Directory", "Path", "Stream", "StreamReader", "StreamWriter", "FileStream", "MemoryStream",
+                "DateTime", "TimeSpan", "DateTimeOffset", "Guid",
+                "Action", "Func", "Predicate", "EventHandler", "Delegate",
+                "Exception", "ArgumentException", "ArgumentNullException", "InvalidOperationException", "NotSupportedException", "NotImplementedException",
+                "Nullable", "Lazy", "WeakReference",
+                "Enumerable", "Queryable",
+                "Debug", "Trace", "Debugger",
+                "Attribute", "Obsolete", "Serializable", "Flags",
+                "WriteLine", "ReadLine", "Write", "ToString", "GetType", "Equals", "GetHashCode", "ReferenceEquals",
+                "Add", "Remove", "Contains", "Clear", "Count", "ToList", "ToArray", "ToDictionary",
+                "Select", "Where", "OrderBy", "OrderByDescending", "GroupBy", "First", "FirstOrDefault", "Last", "LastOrDefault",
+                "Any", "All", "Sum", "Min", "Max", "Average", "Aggregate", "Distinct", "Take", "Skip", "Zip", "Concat"
+            ]
+        };
+
+        langDef.TokenRegexStrings.Add((@"[ \t]*#[ \t]*[a-zA-Z_]+", PaletteIndex.Preprocessor));
+        langDef.TokenRegexStrings.Add((@"\$@""([^""]|"""")*""", PaletteIndex.String));
+        langDef.TokenRegexStrings.Add((@"@""([^""]|"""")*""", PaletteIndex.String));
+        langDef.TokenRegexStrings.Add((@"\$""(\\.|[^""\\])*""", PaletteIndex.String));
+        langDef.TokenRegexStrings.Add((@"L?\""(\\.|[^\""\\])*\""", PaletteIndex.String));
+        langDef.TokenRegexStrings.Add((@"\'\\?[^\']*\'", PaletteIndex.CharLiteral));
+        langDef.TokenRegexStrings.Add(("0[xX][0-9a-fA-F]+[uU]?[lL]?[lL]?", PaletteIndex.Number));
+        langDef.TokenRegexStrings.Add(("0[bB][01]+[uU]?[lL]?[lL]?", PaletteIndex.Number));
+        langDef.TokenRegexStrings.Add(("[+-]?([0-9]+([.][0-9]*)?|[.][0-9]+)([eE][+-]?[0-9]+)?[fFdDmM]?", PaletteIndex.Number));
+        langDef.TokenRegexStrings.Add(("[+-]?[0-9]+[uU]?[lL]?[lL]?", PaletteIndex.Number));
+        langDef.TokenRegexStrings.Add(("[a-zA-Z_][a-zA-Z0-9_]*", PaletteIndex.Identifier));
+        langDef.TokenRegexStrings.Add((@"[\[\]\{\}\!\%\^\&\*\(\)\-\+\=\~\|\<\>\?\/\;\,\.\:]", PaletteIndex.Punctuation));
+
+        return langDef;
+        // csharpier-ignore-end
+    }
 
     /// <summary>Creates a predefined language definition for HLSL (High-Level Shading Language).</summary>
     public static LanguageDefinition Hlsl()
