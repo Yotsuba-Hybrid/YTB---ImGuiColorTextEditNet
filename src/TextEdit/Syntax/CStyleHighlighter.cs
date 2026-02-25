@@ -226,10 +226,10 @@ public class CStyleHighlighter : ISyntaxHighlighter
             // handle end of string
             if (c == '"')
             {
-                for (int j = 0; j < i; j++)
-                    input[i] = new(c, PaletteIndex.String);
+                for (int j = 0; j <= i; j++)
+                    input[j] = new(input[j].Char, PaletteIndex.String);
 
-                return i;
+                return i + 1;
             }
 
             // handle escape character for "

@@ -1,0 +1,36 @@
+---
+title: ImGuiColorTextEditNet
+description: Un editor de texto multi-línea para ImGui con syntax highlighting en .NET
+template: splash
+hero:
+  tagline: Editor de texto con syntax highlighting para ImGui.NET — soporte para C#, C/C++, HLSL, GLSL, SQL, Lua y más.
+  actions:
+    - text: Empezar
+      link: /guides/introduction/
+      icon: right-arrow
+    - text: Ver en GitHub
+      link: https://github.com/Yotsuba-Hybrid/YTB---ImGuiColorTextEditNet
+      icon: external
+      variant: minimal
+---
+
+import { Card, CardGrid } from "@astrojs/starlight/components";
+
+<CardGrid stagger>
+  <Card title="Fácil de usar" icon="puzzle">
+    Tres líneas de código para tener un editor con syntax highlighting
+    funcionando dentro de tu aplicación ImGui.
+  </Card>
+  <Card title="Múltiples lenguajes" icon="list-format">
+    Soporte integrado para C#, C, C++, HLSL, GLSL, SQL y Lua. Crea tus propios
+    lenguajes con regex o tokenización custom.
+  </Card>
+  <Card title="Personalizable" icon="setting">
+    Temas de colores, keybindings custom, breakpoints, error markers y más.
+    Adapta el editor a tus necesidades.
+  </Card>
+  <Card title="100% .NET" icon="rocket">
+    Puerto nativo en C# — sin wrappers P/Invoke ni dependencias nativas.
+    Compatible con .NET 8+.
+  </Card>
+</CardGrid>
