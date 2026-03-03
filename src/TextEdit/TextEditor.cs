@@ -129,6 +129,12 @@ public class TextEditor
         }
     }
 
+    /// <summary>Screen position of the cursor's top-left corner, updated each frame during Render(). Vector2.Zero if cursor was not visible.</summary>
+    public Vector2 LastCursorScreenPosition { get; internal set; }
+
+    /// <summary>Height of a single line in pixels, updated each frame during Render().</summary>
+    public float LineHeight { get; internal set; }
+
     /// <summary>Renders the text editor with the specified title and size. Returns true if the text has changed.</summary>
     public bool Render(string title, Vector2 size = new())
     {

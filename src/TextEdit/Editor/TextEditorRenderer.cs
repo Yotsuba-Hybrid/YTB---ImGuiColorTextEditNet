@@ -29,6 +29,7 @@ public class TextEditorRenderer
     );
 
     readonly SimpleCache<int, string> _lineNumberCache = new("line numbers", x => $"{x} ");
+    readonly TextEditor _editor;
     readonly TextEditorSelection _selection;
     readonly TextEditorText _text;
     readonly TextEditorColor _color;
@@ -39,6 +40,7 @@ public class TextEditorRenderer
     readonly List<uint> _palette = new();
 
     Vector2 _charAdvance;
+    Vector2 _contentOrigin; // origen de la linea 0 en pantalla, cacheado dentro del child window
     DateTime _startTime = DateTime.UtcNow;
     float _textStart = 20.0f; // position (in pixels) where a code line starts relative to the left of the TextEditor.
     uint[]? _uintPalette;
@@ -102,6 +104,7 @@ public class TextEditorRenderer
     internal TextEditorRenderer(TextEditor editor, uint[] palette)
     {
         ArgumentNullException.ThrowIfNull(editor);
+        _editor = editor;
         _selection = editor.Selection;
         _text = editor.Text;
         _breakpoints = editor.Breakpoints;
@@ -170,6 +173,8 @@ public class TextEditorRenderer
 
     void RenderInner()
     {
+        _editor.LastCursorScreenPosition = Vector2.Zero;
+
         /* Compute _charAdvance regarding to scaled font size (Ctrl + mouse wheel)*/
         float fontSize = _charWidthCache.Get('#');
         _charAdvance = new(fontSize, ImGui.GetTextLineHeightWithSpacing() * LineSpacing);
@@ -205,6 +210,7 @@ public class TextEditorRenderer
         float longest = _textStart;
 
         Vector2 cursorScreenPos = ImGui.GetCursorScreenPos();
+        _contentOrigin = cursorScreenPos; // cachear para ScreenPosToCoordinates externo
         var scrollY = ImGui.GetScrollY();
 
         var lineNo = (int)MathF.Floor(scrollY / _charAdvance.Y);
@@ -236,20 +242,6 @@ public class TextEditorRenderer
                 );
             }
 
-            if (ImGui.IsMousePosValid())
-            {
-                var id = _text.GetWordAt(ScreenPosToCoordinates(ImGui.GetMousePos()));
-                if (id.Length != 0)
-                {
-                    var tooltip = _color.SyntaxHighlighter.GetTooltip(id);
-                    if (!string.IsNullOrEmpty(tooltip))
-                    {
-                        ImGui.BeginTooltip();
-                        ImGui.TextUnformatted(tooltip);
-                        ImGui.EndTooltip();
-                    }
-                }
-            }
         }
 
         ImGui.Dummy(new(longest + 2, globalLineMax * _charAdvance.Y));
@@ -441,6 +433,9 @@ public class TextEditorRenderer
                         lineStartScreenPos.Y + _charAdvance.Y
                     );
 
+                    _editor.LastCursorScreenPosition = cstart;
+                    _editor.LineHeight = _charAdvance.Y;
+
                     drawList.AddRectFilled(cstart, cend, ColorUInt(PaletteIndex.Cursor));
 
                     if (elapsed.Milliseconds > CursorBlinkPeriodMs)
@@ -612,9 +607,9 @@ public class TextEditorRenderer
             ImGui.SetScrollX(Math.Max(0.0f, len + _textStart + 4 - width));
     }
 
-    internal Coordinates ScreenPosToCoordinates(Vector2 position)
+    public Coordinates ScreenPosToCoordinates(Vector2 position)
     {
-        Vector2 origin = ImGui.GetCursorScreenPos();
+        Vector2 origin = _contentOrigin;
         Vector2 local = new(position.X - origin.X, position.Y - origin.Y);
 
         int lineCount = _text.LineCount;

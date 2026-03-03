@@ -87,8 +87,8 @@ public static class TextEditorModify
 
             u.AddedEnd = e.Text.InsertTextAt(pos, text);
 
-            e.Selection.Select(pos, pos);
-            e.Selection.Cursor = pos;
+            e.Selection.Select(u.AddedEnd, u.AddedEnd);
+            e.Selection.Cursor = u.AddedEnd;
             e.Color.InvalidateColor(start.Line - 1, u.AddedEnd.Line - start.Line + 1);
         }
 
