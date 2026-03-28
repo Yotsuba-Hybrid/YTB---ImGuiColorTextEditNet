@@ -20,6 +20,16 @@ public class CSharpHighlighter : ISyntaxHighlighter
     }
 
     /// <summary>
+    /// Permite añadir palabras clave dinámicamente al analizador léxico.
+    /// </summary>
+    public void AddCustomWord(string word, PaletteIndex index)
+    {
+        if (!string.IsNullOrEmpty(word))
+        {
+            _identifiers.Add(word, new Identifier(index));
+        }
+    }
+    /// <summary>
     /// Creates a new instance of the CSharpHighlighter.
     /// </summary>
     public CSharpHighlighter()
@@ -52,7 +62,7 @@ public class CSharpHighlighter : ISyntaxHighlighter
     public bool AutoIndentation => true;
 
     /// <inheritdoc/>
-    public int MaxLinesPerFrame => 1000;
+    public int MaxLinesPerFrame => 30_000;
 
     /// <inheritdoc/>
     public string? GetTooltip(string id)

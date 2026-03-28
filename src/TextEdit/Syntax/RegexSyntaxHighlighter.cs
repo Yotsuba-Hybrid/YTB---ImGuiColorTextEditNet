@@ -35,8 +35,8 @@ public class RegexSyntaxHighlighter : ISyntaxHighlighter
         // Build regex list from language definition
         foreach (var (pattern, color) in language.TokenRegexStrings)
         {
-            var options = RegexOptions.Compiled;
-            if (!language.CaseSensitive)
+            var options = RegexOptions.None;
+            //if (!language.CaseSensitive)
                 options |= RegexOptions.IgnoreCase;
 
             _regexList.Add((new Regex(pattern, options), color));

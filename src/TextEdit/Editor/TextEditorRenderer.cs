@@ -219,7 +219,7 @@ public class TextEditorRenderer
             0,
             Math.Min(
                 globalLineMax - 1,
-                lineNo + (int)MathF.Floor((scrollY + contentSize.Y) / _charAdvance.Y)
+                (int)MathF.Floor((scrollY + contentSize.Y) / _charAdvance.Y)
             )
         );
 
